@@ -1,0 +1,155 @@
+C51 COMPILER V9.00   QESTION2                                                              10/24/2023 15:26:40 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE QESTION2
+OBJECT MODULE PLACED IN .\Objects\qestion2.obj
+COMPILER INVOKED BY: E:\Keil4\C51\BIN\C51.EXE ..\秒表\qestion2.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\qestion2.lst
+                    -) OBJECT(.\Objects\qestion2.obj)
+
+line level    source
+
+   1          #include "reg52.h"                       
+   2          
+   3          typedef unsigned int u16;         
+   4          typedef unsigned char u8;
+   5          
+   6          sbit LSA=P2^2;
+   7          sbit LSB=P2^3;
+   8          sbit LSC=P2^4;
+   9          
+  10          
+  11          //导入数码管段码
+  12          u8 code smgduan[17]={0x3f,0x06,0x5b,
+  13                                   0x4f,0x66,0x6d,
+  14                                   0x7d,0x07,0x7f,
+  15                               0x6f,0x77,0x7c,
+  16                               0x39,0x5e,0x79,
+  17                               0x71};
+  18          
+  19          u8 ssec,sec,min; //毫秒 秒 分
+  20          u8 DisplayData[8];       //8个显示的数字放在一个数组里
+  21          
+  22                                                                                           
+  23          void delay(u16 i)
+  24          {
+  25   1              while(i--);     
+  26   1      }
+  27          
+  28          
+  29          void Timer0Init()
+  30          {
+  31   1              TMOD|=0X01;//对TMOD赋值 0000 0001：工作方式0，仅启用TR0
+  32   1              //定时时长10ms，前四位d8，后四位f0
+  33   1              TH0=(65536-12100)/256;
+  34   1              TL0=(65536-12100)%256;
+  35   1              
+  36   1              ET0=1;//打开T0中断
+  37   1              
+  38   1              EA=1;//打开总中断
+  39   1              
+  40   1              TR0=1;//打开定时器计数  
+  41   1      }
+  42          
+  43          
+  44          void DigDisplay()
+  45          {
+  46   1              u8 i;
+  47   1              for(i=0;i<8;i++)
+  48   1              {
+  49   2                      switch(i)        //数码管动态扫描函数，循环扫描8个数码管显示
+  50   2                      {
+  51   3                              case(0):
+  52   3                                      LSA=1;LSB=1;LSC=1; break;//第7位
+  53   3                              case(1):
+  54   3                                      LSA=0;LSB=1;LSC=1; break;//第6位
+C51 COMPILER V9.00   QESTION2                                                              10/24/2023 15:26:40 PAGE 2   
+
+  55   3                              case(2):
+  56   3                                      LSA=1;LSB=0;LSC=1; break;//第5位
+  57   3                              case(3):
+  58   3                                      LSA=0;LSB=0;LSC=1; break;//第4位
+  59   3                              case(4):
+  60   3                                      LSA=1;LSB=1;LSC=0; break;//第3位
+  61   3                              case(5):
+  62   3                                      LSA=0;LSB=1;LSC=0; break;//第2位
+  63   3                              case(6):
+  64   3                                      LSA=1;LSB=0;LSC=0; break;//第1位
+  65   3                      }
+  66   2                      P0=DisplayData[i];//发送段码
+  67   2                      P0=0x00;//消影
+  68   2              }
+  69   1      }
+  70          
+  71          
+  72          void datapros()
+  73          {
+  74   1              DisplayData[0]=smgduan[min/10];
+  75   1              DisplayData[1]=smgduan[min%10];
+  76   1              DisplayData[2]=0x40;    
+  77   1              DisplayData[3]=smgduan[sec/10];
+  78   1              DisplayData[4]=smgduan[sec%10]|0x80;
+  79   1              DisplayData[5]=smgduan[ssec/10];
+  80   1              DisplayData[6]=smgduan[ssec%10];
+  81   1      }
+  82          
+  83          
+  84          
+  85          
+  86          
+  87          void start()
+  88          {
+  89   1          datapros();
+  90   1                DigDisplay(); 
+  91   1      }
+  92          
+  93          
+  94          void main()
+  95          {       
+  96   1              Timer0Init(); 
+  97   1              while(1)
+  98   1              {
+  99   2                      start();
+ 100   2              }               
+ 101   1      }
+ 102          
+ 103          
+ 104          void Timer0() interrupt 1
+ 105          {
+ 106   1              
+ 107   1              TH0=(65536-12100)/256;
+ 108   1              TL0=(65536-12100)%256;
+ 109   1              ssec++;
+ 110   1              
+ 111   1              if(ssec>=100)  //1s
+ 112   1              {
+ 113   2                      ssec=0;
+ 114   2                      sec++;
+ 115   2                      if(sec>=60)
+ 116   2                      {
+C51 COMPILER V9.00   QESTION2                                                              10/24/2023 15:26:40 PAGE 3   
+
+ 117   3                              sec=0;
+ 118   3                              min++;
+ 119   3                              if(min>=60)
+ 120   3                              {
+ 121   4                                      min=0;
+ 122   4                              }
+ 123   3                      }       
+ 124   2              }       
+ 125   1      }
+ 126          
+ 127          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    252    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     11    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

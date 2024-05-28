@@ -1,0 +1,7 @@
+".\Objects\24c02.obj",
+".\Objects\iic.obj",
+".\Objects\serial_debug.obj",
+".\Objects\main.obj",
+".\Objects\public.obj" 
+TO ".\Objects\24c20" 
+PRINT(".\Listings\24c20.m51") RAMSIZE(256) 

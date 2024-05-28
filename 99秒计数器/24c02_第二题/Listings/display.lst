@@ -1,0 +1,75 @@
+C51 COMPILER V9.00   DISPLAY                                                               03/08/2024 12:36:29 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\Objects\display.obj
+COMPILER INVOKED BY: E:\Keil4\C51\BIN\C51.EXE App\smg\display.c LARGE BROWSE INCDIR(.\App\24c02;.\App\iic;.\App\serial_d
+                    -ebug;.\Public) DEBUG OBJECTEXTEND PRINT(.\Listings\display.lst) OBJECT(.\Objects\display.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include "public.h"
+   3          #include "display.h"
+   4          
+   5          u8 mb[2];
+   6          
+   7          //定义数码管显示
+   8          u8 code smgduan[17]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,
+   9                                                  0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71};//显示0~F的值
+  10          
+  11          /*******************************************************************************
+  12          * 函 数 名         : Timer0Init
+  13          * 函数功能                 : 定时器0初始化
+  14          * 输    入         : 无
+  15          * 输    出         : 无
+  16          *******************************************************************************/
+  17          void Timer0Init()
+  18          {
+  19   1              TMOD|=0X01;//选择为定时器0模式，工作方式1，仅用TR0打开启动。
+  20   1              TH0=0XFC;       //给定时器赋初值，定时1ms
+  21   1              TL0=0X18;       
+  22   1              TR0=1;//打开定时器                      
+  23   1      }
+  24          
+  25          /*******************************************************************************
+  26          * 函 数 名         : DigDisplay
+  27          * 函数功能                 : 数码管动态扫描函数，循环扫描2个数码管显示
+  28          *******************************************************************************/
+  29          void DigDisplay()
+  30          {
+  31   1              u8 i;
+  32   1              for(i=0;i<2;i++)
+  33   1              {
+  34   2                      switch(i)        //位选，选择点亮的数码管，
+  35   2                      {
+  36   3                              case 0: LSC=1;LSB=1;LSA=1;break;
+  37   3                              case 1: LSC=1;LSB=1;LSA=0;break;
+  38   3                              case 2: LSC=1;LSB=0;LSA=1;break;
+  39   3                              case 3: LSC=1;LSB=0;LSA=0;break;
+  40   3                              case 4: LSC=0;LSB=1;LSA=1;break;
+  41   3                              case 5: LSC=0;LSB=1;LSA=0;break;
+  42   3                              case 6: LSC=0;LSB=0;LSA=1;break;
+  43   3                              case 7: LSC=0;LSB=0;LSA=0;break;        
+  44   3                      }
+  45   2                      P0=smgduan[mb[i]];//发送段码
+  46   2                      delay(1); //间隔一段时间扫描    
+  47   2                      P0=0x00;//消隐
+  48   2              }
+  49   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    150    ----
+   CONSTANT SIZE    =     17    ----
+C51 COMPILER V9.00   DISPLAY                                                               03/08/2024 12:36:29 PAGE 2   
+
+   XDATA SIZE       =      2       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

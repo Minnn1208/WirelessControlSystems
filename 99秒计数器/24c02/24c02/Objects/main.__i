@@ -1,0 +1,1 @@
+"User\main.c" LARGE BROWSE INCDIR(.\App;.\App\24c02;.\App\smg;.\App\24c02;.\App\iic;.\App\serial_debug;.\Public) DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) OBJECT(.\Objects\main.obj)

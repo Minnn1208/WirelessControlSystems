@@ -1,0 +1,189 @@
+C51 COMPILER V9.00   TIMER_WITHKEY                                                         10/24/2023 16:01:47 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE TIMER_WITHKEY
+OBJECT MODULE PLACED IN .\Objects\timer_withKey.obj
+COMPILER INVOKED BY: E:\Keil4\C51\BIN\C51.EXE ..\秒表\timer_withKey.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\timer_w
+                    -ithKey.lst) OBJECT(.\Objects\timer_withKey.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          
+   3          typedef unsigned int u16;
+   4          typedef unsigned char u8;
+   5          
+   6          sbit LSA=P2^2;
+   7          sbit LSB=P2^3;
+   8          sbit LSC=P2^4;
+   9          
+  10          sbit K1=P3^2;  //开始
+  11          sbit K2=P3^0;  //停止
+  12          sbit K3=P3^3;  //清零  
+  13          
+  14          u8 code smgduan[17]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,
+  15          0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71};//导入数码管段码
+  16          
+  17          u8 ssec,sec,min; //毫秒 秒 分
+  18          u8 DisplayData[8]; //8个显示的数字放在一个数组里
+  19          
+  20          void delay(u16 i)
+  21          {
+  22   1      while(i--);
+  23   1      }
+  24          
+  25          void Delay10ms()                //@11.0592MHz
+  26          {
+  27   1              unsigned char i, j;
+  28   1      
+  29   1              i = 18;
+  30   1              j = 235;
+  31   1              do
+  32   1              {
+  33   2                      while (--j);
+  34   2              } while (--i);
+  35   1      }
+  36          
+  37          
+  38          void Timer0Init() //定时器0的初始化
+  39          {
+  40   1      TMOD|=0X01; //对TMOD赋值 0000 0001：工作方式0，仅启用TR0
+  41   1      //TH0=0Xd8; //定时时长10ms，前四位d8，后四位f0
+  42   1      //TL0=0Xf0;
+  43   1      TH0=(65536-16300)/256;
+  44   1      TL0=(65536-16300)%256;
+  45   1      ET0=1; //打开T0中断
+  46   1      EA=1; //打开总中断
+  47   1      TR0=1; //打开定时器计数
+  48   1      }
+  49          
+  50          void DigDisplay() //数码管动态扫描函数，循环扫描8个数码管显示
+  51          {
+  52   1      u8 i;
+  53   1      for(i=0;i<8;i++)
+  54   1      {
+C51 COMPILER V9.00   TIMER_WITHKEY                                                         10/24/2023 16:01:47 PAGE 2   
+
+  55   2      switch(i) //i：位数
+  56   2      {
+  57   3      case(0):
+  58   3      LSA=1;LSB=1;LSC=1; break;//第7位
+  59   3      case(1):
+  60   3      LSA=0;LSB=1;LSC=1; break;//第6位
+  61   3      case(2):
+  62   3      LSA=1;LSB=0;LSC=1; break;//第5位
+  63   3      case(3):
+  64   3      LSA=0;LSB=0;LSC=1; break;//第4位
+  65   3      case(4):
+  66   3      LSA=1;LSB=1;LSC=0; break;//第3位
+  67   3      case(5):
+  68   3      LSA=0;LSB=1;LSC=0; break;//第2位
+  69   3      case(6):
+  70   3      LSA=1;LSB=0;LSC=0; break;//第1位
+  71   3      case(7):
+  72   3      LSA=0;LSB=0;LSC=0;break; // 0
+  73   3      }
+  74   2      P0=DisplayData[i]; //发送段码
+  75   2      //delay(0); //人眼视觉暂留
+  76   2      P0=0x00; //消影
+  77   2      }
+  78   1      }
+  79          
+  80          //设置外部中断1 （K3）
+  81          void Int0Init()
+  82          {
+  83   1            IT1=1;
+  84   1                EX1=1;
+  85   1                EA=1; 
+  86   1      }
+  87          
+  88          //中断服务函数（按键）
+  89          void Int0()  interrupt 0
+  90          {
+  91   1          //消抖
+  92   1              Delay10ms();
+  93   1              if(K3==0)
+  94   1              {
+  95   2              //清零
+  96   2                 min=0;
+  97   2                 sec=0;
+  98   2            ssec=0;
+  99   2              }
+ 100   1      }
+ 101          
+ 102          void datapros()
+ 103          {
+ 104   1      DisplayData[0]=0x3f;
+ 105   1      DisplayData[1]=smgduan[min/10];
+ 106   1      DisplayData[2]=smgduan[min%10];
+ 107   1      DisplayData[3]=0x40;
+ 108   1      DisplayData[4]=smgduan[sec/10];
+ 109   1      DisplayData[5]=smgduan[sec%10]|0x80;
+ 110   1      DisplayData[6]=smgduan[ssec/10];
+ 111   1      DisplayData[7]=smgduan[ssec%10];
+ 112   1      }
+ 113          void main()
+ 114          {
+ 115   1      Timer0Init(); //定时器0初始化
+ 116   1      //Int0Init();
+C51 COMPILER V9.00   TIMER_WITHKEY                                                         10/24/2023 16:01:47 PAGE 3   
+
+ 117   1      
+ 118   1              while(1)
+ 119   1              {
+ 120   2                      if(K1==0)        //开始
+ 121   2                      {
+ 122   3                              Delay10ms();//消抖
+ 123   3                              while(1)
+ 124   3                              {
+ 125   4                                      if(K2==0)
+ 126   4                                      {
+ 127   5                                        EA=0;      //总中断关闭
+ 128   5                                      }
+ 129   4                                      
+ 130   4                                       datapros();
+ 131   4                                       DigDisplay();     //开始计时
+ 132   4                                        
+ 133   4                                        
+ 134   4                                       if(K3==0)
+ 135   4                                       {
+ 136   5                                               break;  //退出
+ 137   5                                       }
+ 138   4                              }
+ 139   3                      }
+ 140   2                   //跳出循环 
+ 141   2              }
+ 142   1              if(K3==0)
+ 143   1              {
+ 144   2                break;
+*** ERROR C171 IN LINE 144 OF ..\秒表\TIMER_WITHKEY.C: 'break': missing enclosing loop
+ 145   2              }
+ 146   1      }
+ 147          
+ 148          
+ 149          void Timer0() interrupt 1 //定时器0中断函数
+ 150          {
+ 151   1      //TH0=0Xd8;
+ 152   1      //TL0=0Xf0;
+ 153   1      TH0=(65536-16300)/256;
+ 154   1      TL0=(65536-16300)%256;
+ 155   1      delay(100);
+ 156   1      ssec++;
+ 157   1      if(ssec>=100) //1s
+ 158   1      {
+ 159   2      ssec=0;
+ 160   2      sec++;
+ 161   2      if(sec>=60)
+ 162   2      {
+ 163   3      sec=0;
+ 164   3      min++;
+ 165   3      if(min>=60)
+ 166   3      {
+ 167   4      min=0;
+ 168   4      }
+ 169   3      }
+ 170   2      }
+ 171   1      }
+ 172          
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

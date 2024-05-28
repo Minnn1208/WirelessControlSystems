@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"program.obj" 
+TO "basketballcounter" 
+RAMSIZE(256) 

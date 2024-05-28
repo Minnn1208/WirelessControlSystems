@@ -1,0 +1,81 @@
+#include<reg52.h>
+unsigned char code table[]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f};
+typedef unsigned int uint;
+uint i,j,f1=0;
+uint q=4,p=2;
+uint sum = 0;
+sbit P2_0=P2^0;
+sbit P2_1=P2^1;
+sbit P2_2=P2^2;
+sbit P2_3=P2^3;
+uint num2=0,num=24,shi=2,ge=4;
+void T1_time()interrupt 3
+{
+                TH1=(65536-49000)/256;
+                TL1=(65536-49000)%256;
+                num2++;
+                if(num2==20){
+                num2=0;
+               
+                if(!f1){
+                if(num!=0)num--;
+                shi=num/10;
+                ge=num%10;
+                }
+                }
+
+}
+void ex_int()interrupt 0
+{
+         num=24;
+}
+
+void ex_int1()interrupt 2
+{                                                                                                   
+        sum++;
+        if(sum%2==1)
+                f1=1;
+        else
+                f1=0;
+}
+void delay()
+{
+  uint j;
+  for(j=0;j<200;j++);
+}
+void disply()
+{
+         P2&=0XF0;
+         
+         P1=table[shi];
+         P2_0=1;
+         delay();
+
+         P2&=0XF0;
+         
+         P1=table[ge];
+         P2_1=1;
+         delay();
+
+         P1=0;
+         P2&=0XF0;
+}
+main()
+{
+          TMOD=0X10;
+          TH1=(65536-49000)/256;
+          TL1=(65536-49000)%256;
+          EA=1;
+          EX0=1;
+          IT0=1;
+          EX1=1;
+          IT1=1;
+          ET1=1;
+          TR1=1;
+          
+           while(1)
+           {
+                  disply();
+                   
+           }
+}

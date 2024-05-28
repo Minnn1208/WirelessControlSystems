@@ -1,0 +1,94 @@
+C51 COMPILER V9.54   PROGRAM                                                               10/09/2023 16:57:33 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE PROGRAM
+OBJECT MODULE PLACED IN program.OBJ
+COMPILER INVOKED BY: C:\Keil5_C51\C51\BIN\C51.EXE program.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1           #include<reg51.h>  
+   2          
+   3          sbit DUANX = P2^6;    //段选信号的锁存器控制  
+   4          sbit WEIX = P2^7;   //位选信号的锁存器控制  
+   5          sbit A = P2^4;
+   6          sbit B1 = P2^3;
+   7          sbit C = P2^2; // 数码管显示的位置
+   8          
+   9          #define uchar unsigned char  //宏定义（预处理指令，不是语句，后面不用加分号）
+  10          #define uint unsigned int   //宏定义（用法和上面类似）
+  11          
+  12          /*unsigned char code table[]={  //数码管各位的码表
+  13          0xfe,0xfd,0xfb,0xf7,
+  14          0xef,0xdf,0xbf,0x7f};*/
+  15          
+  16          unsigned char code table2[]={  //数码管显示的码表
+  17          0x3f,0x06,0x5b,0x4f,0x66,
+  18          0x6d,0x7d,0x07,0x7f,0x6f};
+  19          
+  20          void delay(uint z)  //延时函数
+  21          {
+  22   1        unsigned int x,y;
+  23   1        for(x = z; x > 0; x--){
+  24   2          for(y=3000;y>0;y--);
+  25   2        }   
+  26   1      }
+  27          
+  28          void main(){
+  29   1        //uchar nums,nums2;
+  30   1        uint time;
+  31   1        while(1){
+  32   2          for(time = 24; ;time--){   
+  33   3            //第一位数（十位数）
+  34   3            A = 1;
+  35   3            B1 = 1;
+  36   3            C = 1;
+  37   3            P0 = table2[time / 10];
+  38   3            P0 = 0;
+  39   3            delay(1000);
+  40   3            //第二位数（个位数）
+  41   3            A = 1;
+  42   3            B1 = 1;
+  43   3            C = 0;
+  44   3            P0 = table2[time % 10];
+  45   3            P0 = 0;
+  46   3            delay(1000);
+  47   3            if(time / 10 < 0){
+  48   4              time = 24;
+  49   4            }
+  50   3          }
+  51   2          
+  52   2          
+  53   2          
+  54   2          
+  55   2          
+C51 COMPILER V9.54   PROGRAM                                                               10/09/2023 16:57:33 PAGE 2   
+
+  56   2          /*WEIX = 1;    //打开位选锁存器
+  57   2          P0=table[nums];  //送入位选信号，调用数组
+  58   2          WEIX = 0;    //关闭位选锁存器
+  59   2          for(nums2 = 9;nums2 >=0;nums2--)
+  60   2          {
+  61   2            DUANX = 1;         //打开段选锁存器
+  62   2            P0=table2[nums2];  //送入段选信号，显示数字1的代码
+  63   2            DUANX = 0;         //关闭段选锁存器
+  64   2            delay(1000);       //调用延时函数 
+  65   2          }*/
+  66   2          
+  67   2        }
+  68   1      
+  69   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    131    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

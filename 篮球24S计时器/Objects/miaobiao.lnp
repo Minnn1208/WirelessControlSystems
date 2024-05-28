@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\timer_withKey2.obj" 
+TO ".\Objects\miaobiao" 
+PRINT(".\Listings\miaobiao.m51") RAMSIZE(256) 

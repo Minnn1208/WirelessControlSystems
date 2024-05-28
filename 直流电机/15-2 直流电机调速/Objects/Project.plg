@@ -1,0 +1,99 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\86134\Desktop\无线系统综合设计\直流电机\15-2 直流电机调速\Project.uvproj
+Project File Date:  04/07/2024
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling Delay.c...
+compiling Key.c...
+KEY.C(9): error C141: syntax error near '{'
+KEY.C(12): error C141: syntax error near 'if'
+KEY.C(12): error C141: syntax error near '==', expected ')'
+KEY.C(12): error C141: syntax error near '20'
+KEY.C(12): error C231: '_Delay': redefinition
+KEY.C(12): error C141: syntax error near 'while'
+KEY.C(12): error C141: syntax error near '==', expected ')'
+KEY.C(12): error C141: syntax error near '20'
+KEY.C(12): error C231: '_Delay': redefinition
+KEY.C(12): error C279: 'KeyNumber': multiple initialization
+KEY.C(12): error C231: 'KeyNumber': redefinition
+KEY.C(12): error C141: syntax error near '}'
+KEY.C(13): error C141: syntax error near '==', expected ')'
+KEY.C(13): error C141: syntax error near '20'
+KEY.C(13): error C231: '_Delay': redefinition
+KEY.C(13): error C141: syntax error near 'while'
+KEY.C(13): error C141: syntax error near '==', expected ')'
+KEY.C(13): error C141: syntax error near '20'
+KEY.C(13): error C231: '_Delay': redefinition
+KEY.C(13): error C279: 'KeyNumber': multiple initialization
+KEY.C(13): error C141: syntax error near '}'
+KEY.C(14): error C141: syntax error near '==', expected ')'
+KEY.C(14): error C141: syntax error near '20'
+KEY.C(14): error C231: '_Delay': redefinition
+KEY.C(14): error C141: syntax error near 'while'
+KEY.C(14): error C141: syntax error near '==', expected ')'
+KEY.C(14): error C141: syntax error near '20'
+KEY.C(14): error C231: '_Delay': redefinition
+KEY.C(14): error C279: 'KeyNumber': multiple initialization
+KEY.C(14): error C141: syntax error near '}'
+KEY.C(15): error C141: syntax error near '==', expected ')'
+KEY.C(15): error C141: syntax error near '20'
+KEY.C(15): error C231: '_Delay': redefinition
+KEY.C(15): error C141: syntax error near 'while'
+KEY.C(15): error C141: syntax error near '==', expected ')'
+KEY.C(15): error C141: syntax error near '20'
+KEY.C(15): error C231: '_Delay': redefinition
+KEY.C(15): error C279: 'KeyNumber': multiple initialization
+KEY.C(15): error C141: syntax error near '}'
+KEY.C(18): error C141: syntax error near '}'
+compiling Nixie.c...
+compiling Timer0.c...
+Target not created
+Build target 'Target 1'
+compiling Key.c...
+KEY.C(9): error C141: syntax error near '{'
+KEY.C(12): error C141: syntax error near 'if'
+KEY.C(12): error C141: syntax error near '==', expected ')'
+KEY.C(12): error C141: syntax error near '20'
+KEY.C(12): error C231: '_Delay': redefinition
+KEY.C(12): error C141: syntax error near 'while'
+KEY.C(12): error C141: syntax error near '==', expected ')'
+KEY.C(12): error C141: syntax error near '20'
+KEY.C(12): error C231: '_Delay': redefinition
+KEY.C(12): error C279: 'KeyNumber': multiple initialization
+KEY.C(12): error C231: 'KeyNumber': redefinition
+KEY.C(12): error C141: syntax error near '}'
+KEY.C(13): error C141: syntax error near '==', expected ')'
+KEY.C(13): error C141: syntax error near '20'
+KEY.C(13): error C231: '_Delay': redefinition
+KEY.C(13): error C141: syntax error near 'while'
+KEY.C(13): error C141: syntax error near '==', expected ')'
+KEY.C(13): error C141: syntax error near '20'
+KEY.C(13): error C231: '_Delay': redefinition
+KEY.C(13): error C279: 'KeyNumber': multiple initialization
+KEY.C(13): error C141: syntax error near '}'
+KEY.C(14): error C141: syntax error near '==', expected ')'
+KEY.C(14): error C141: syntax error near '20'
+KEY.C(14): error C231: '_Delay': redefinition
+KEY.C(14): error C141: syntax error near 'while'
+KEY.C(14): error C141: syntax error near '==', expected ')'
+KEY.C(14): error C141: syntax error near '20'
+KEY.C(14): error C231: '_Delay': redefinition
+KEY.C(14): error C279: 'KeyNumber': multiple initialization
+KEY.C(14): error C141: syntax error near '}'
+KEY.C(15): error C141: syntax error near '==', expected ')'
+KEY.C(15): error C141: syntax error near '20'
+KEY.C(15): error C231: '_Delay': redefinition
+KEY.C(15): error C141: syntax error near 'while'
+KEY.C(15): error C141: syntax error near '==', expected ')'
+KEY.C(15): error C141: syntax error near '20'
+KEY.C(15): error C231: '_Delay': redefinition
+KEY.C(15): error C279: 'KeyNumber': multiple initialization
+KEY.C(15): error C141: syntax error near '}'
+KEY.C(18): error C141: syntax error near '}'
+Target not created

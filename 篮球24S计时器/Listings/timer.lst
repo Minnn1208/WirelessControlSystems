@@ -1,0 +1,135 @@
+C51 COMPILER V9.00   TIMER                                                                 10/24/2023 15:11:27 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\Objects\timer.obj
+COMPILER INVOKED BY: E:\Keil4\C51\BIN\C51.EXE ..\秒表\timer.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\timer.lst) OBJE
+                    -CT(.\Objects\timer.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          
+   3          typedef unsigned int u16;
+   4          typedef unsigned char u8;
+   5          
+   6          sbit LSA=P2^2;
+   7          sbit LSB=P2^3;
+   8          sbit LSC=P2^4;
+   9          
+  10          u8 code smgduan[17]={0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,
+  11          0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71};//导入数码管段码
+  12          
+  13          u8 ssec,sec,min; //毫秒 秒 分
+  14          u8 DisplayData[8]; //8个显示的数字放在一个数组里
+  15          
+  16          void delay(u16 i)
+  17          {
+  18   1      while(i--);
+  19   1      }
+  20          
+  21          void Timer0Init() //定时器0的初始化
+  22          {
+  23   1      TMOD|=0X01; //对TMOD赋值 0000 0001：工作方式0，仅启用TR0
+  24   1      //TH0=0Xd8; //定时时长10ms，前四位d8，后四位f0
+  25   1      //TL0=0Xf0;
+  26   1      TH0=(65536-3350)/256;
+  27   1      TL0=(65536-3350)%256;
+  28   1      ET0=1; //打开T0中断
+  29   1      EA=1; //打开总中断
+  30   1      TR0=1; //打开定时器计数
+  31   1      }
+  32          
+  33          void DigDisplay() //数码管动态扫描函数，循环扫描8个数码管显示
+  34          {
+  35   1      u8 i;
+  36   1      for(i=0;i<8;i++)
+  37   1      {
+  38   2      switch(i) //i：位数
+  39   2      {
+  40   3      case(0):
+  41   3      LSA=1;LSB=1;LSC=1; break;//第7位
+  42   3      case(1):
+  43   3      LSA=0;LSB=1;LSC=1; break;//第6位
+  44   3      case(2):
+  45   3      LSA=1;LSB=0;LSC=1; break;//第5位
+  46   3      case(3):
+  47   3      LSA=0;LSB=0;LSC=1; break;//第4位
+  48   3      case(4):
+  49   3      LSA=1;LSB=1;LSC=0; break;//第3位
+  50   3      case(5):
+  51   3      LSA=0;LSB=1;LSC=0; break;//第2位
+  52   3      case(6):
+  53   3      LSA=1;LSB=0;LSC=0; break;//第1位
+  54   3      case(7):
+C51 COMPILER V9.00   TIMER                                                                 10/24/2023 15:11:27 PAGE 2   
+
+  55   3      LSA=0;LSB=0;LSC=0;break; // 0
+  56   3      }
+  57   2      P0=DisplayData[i]; //发送段码
+  58   2      delay(0); //人眼视觉暂留
+  59   2      P0=0x00; //消影
+  60   2      }
+  61   1      }
+  62          
+  63          void datapros()
+  64          {
+  65   1      DisplayData[0]=0x3f;
+  66   1      DisplayData[1]=smgduan[min/10];
+  67   1      DisplayData[2]=smgduan[min%10];
+  68   1      DisplayData[3]=0x40;
+  69   1      DisplayData[4]=smgduan[sec/10];
+  70   1      DisplayData[5]=smgduan[sec%10]|0x80;
+  71   1      DisplayData[6]=smgduan[ssec/10];
+  72   1      DisplayData[7]=smgduan[ssec%10];
+  73   1      }
+  74          void main()
+  75          {
+  76   1      Timer0Init(); //定时器0初始化
+  77   1      while(1)
+  78   1      {
+  79   2      datapros();
+  80   2      DigDisplay();
+  81   2      }
+  82   1      }
+  83          
+  84          void Timer0() interrupt 1 //定时器0中断函数
+  85          {
+  86   1      //TH0=0Xd8;
+  87   1      //TL0=0Xf0;
+  88   1      TH0=(65536-3350)/256;
+  89   1      TL0=(65536-3350)%256;
+  90   1      delay(100);
+  91   1      ssec++;
+  92   1      if(ssec>=100) //1s
+  93   1      {
+  94   2      ssec=0;
+  95   2      sec++;
+  96   2      if(sec>=60)
+  97   2      {
+  98   3      sec=0;
+  99   3      min++;
+ 100   3      if(min>=60)
+ 101   3      {
+ 102   4      min=0;
+ 103   4      }
+ 104   3      }
+ 105   2      }
+ 106   1      }
+ 107          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    289    ----
+   CONSTANT SIZE    =     17    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     11    ----
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.00   TIMER                                                                 10/24/2023 15:11:27 PAGE 3   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

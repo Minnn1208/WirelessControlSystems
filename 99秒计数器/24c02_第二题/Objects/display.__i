@@ -1,0 +1,1 @@
+"App\smg\display.c" LARGE BROWSE INCDIR(.\App\24c02;.\App\iic;.\App\serial_debug;.\Public) DEBUG OBJECTEXTEND PRINT(.\Listings\display.lst) OBJECT(.\Objects\display.obj)

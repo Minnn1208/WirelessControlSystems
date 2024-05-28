@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\timer_withKey.obj" 
+TO ".\Objects\jishiqi24" 
+PRINT(".\Listings\jishiqi24.m51") RAMSIZE(256) 
